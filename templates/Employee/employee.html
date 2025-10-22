@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GSU Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="flex-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo-container">
+                    <img src="/static/uploads/lspu_logo.avif" alt="GSU Logo" class="logo-image">
+                </div>
+                <div class="logo-text">
+                    <div class="text-line">General</div>
+                    <div class="text-line">Services</div>
+                    <div class="text-line">Unit</div>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <button class="nav-btn active" data-tab="monitoring">
+                    <i class="fas fa-eye"></i>
+                    <span>Monitoring</span>
+                </button>
+                <button class="nav-btn" data-tab="inventory">
+                    <i class="fas fa-cube"></i>
+                    <span>Inventory</span>
+                </button>
+                <button class="nav-btn" data-tab="borrowing">
+                    <i class="fas fa-exchange-alt"></i>
+                    <span>Borrowing</span>
+                </button>
+                <button class="nav-btn" data-tab="graph">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Graph</span>
+                </button>
+            </nav>
+
+            <button class="settings-btn">
+                <i class="fas fa-cog"></i>
+                <span>Settings</span>
+            </button>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Header -->
+            <div class="header">
+                <div class="header-left">
+                    <i class="fas fa-eye"></i>
+                    <h1>Area Monitoring</h1>
+                </div>
+                <div class="header-right">
+                    <button class="super-btn" id="superRemainingBtn">
+                        <span>Super Remaining</span>
+                        <div class="btn-icon"></div>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Logout Panel (Hidden by default) -->
+            <div class="logout-panel" id="logoutPanel">
+                <div class="logout-content">
+                    <div class="logout-header">
+                        <h3>Session Information</h3>
+                        <button class="close-btn" id="closeLogoutPanel">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="logout-info">
+                        <div class="info-item">
+                            <span class="info-label">User:</span>
+                            <span class="info-value">Admin User</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Login Time:</span>
+                            <span class="info-value" id="loginTime">Loading...</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Session Duration:</span>
+                            <span class="info-value" id="sessionDuration">Loading...</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Last Activity:</span>
+                            <span class="info-value" id="lastActivity">Just now</span>
+                        </div>
+                    </div>
+                    <div class="logout-actions">
+                        <button class="logout-btn" id="confirmLogout">
+                            <i class="fas fa-sign-out-alt"></i>
+                            Log Out
+                        </button>
+                        <button class="cancel-btn" id="cancelLogout">
+                            Cancel
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="content-area">
+                <div class="stats-grid">
+                    <div class="stat-card blue">
+                        <div class="stat-header">
+                            <span class="stat-title">Unresolved Area</span>
+                            <div class="stat-icon">
+                                <span>?</span>
+                            </div>
+                        </div>
+                        <div class="stat-value">{{ stats.unresolved }}</div>
+                    </div>
+
+                    <div class="stat-card purple">
+                        <div class="stat-header">
+                            <span class="stat-title">Due Stock items</span>
+                            <div class="stat-icon warning">
+                                <span>⚠</span>
+                            </div>
+                        </div>
+                        <div class="stat-value">{{ stats.overdue }}</div>
+                    </div>
+
+                    <div class="stat-card green">
+                        <div class="stat-header">
+                            <span class="stat-title">Item Borrowed</span>
+                            <div class="stat-icon">
+                                <span>📋</span>
+                            </div>
+                        </div>
+                        <div class="stat-value">{{ stats.open }}</div>
+                    </div>
+
+                    <div class="stat-card gray">
+                        <div class="stat-header">
+                            <span class="stat-title">Areas this Month</span>
+                            <div class="stat-icon">
+                                <span>⏱</span>
+                            </div>
+                        </div>
+                        <div class="stat-value">{{ stats.onHold }}</div>
+                    </div>
+                </div>
+
+                <!-- Add New Area Button -->
+                <div class="action-bar">
+                    <button class="add-btn">
+                        <i class="fas fa-plus"></i>
+                        <span>Add New Area</span>
+                    </button>
+                </div>
+
+                <!-- Table -->
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Areas</th>
+                                <th>Status</th>
+                                <th>Last Check</th>
+                                <th>Checked By</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for area in areas %}
+                            <tr class="{{ 'even' if loop.index0 % 2 == 0 else 'odd' }}">
+                                <td>{{ area.name }}</td>
+                                <td>
+                                    <span class="status-badge {{ 'done' if area.status == 'Done' else 'pending' }}">
+                                        {{ area.status }}
+                                    </span>
+                                </td>
+                                <td>{{ area.lastCheck }}</td>
+                                <td>{{ area.checkedBy }}</td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="action-btn">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="action-btn">
+                                            <i class="fas fa-camera"></i>
+                                        </button>
+                                        <button class="action-btn">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

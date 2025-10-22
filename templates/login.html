@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GSU - General Services Unit</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-image: linear-gradient(180deg, #6E99D1, #9670A4);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+        }
+
+        .back-button {
+            position: absolute;
+            top: 30px;
+            left: 30px;
+            background: linear-gradient(135deg, #8b7ab8 0%, #9b8fb8 100%);
+            border: none;
+            border-radius: 10px;
+            width: auto;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 100;
+            box-shadow: 0 4px 15px rgba(139, 122, 184, 0.4);
+            padding: 0 20px;
+            gap: 8px;
+        }
+
+        .back-button:hover {
+            background: linear-gradient(135deg, #7a69a7 0%, #8a7ea7 100%);
+            transform: translateX(-3px);
+            box-shadow: 0 6px 20px rgba(139, 122, 184, 0.6);
+        }
+
+        .back-button:active {
+            transform: translateX(-1px);
+        }
+
+        .back-button svg {
+            width: 28px;
+            height: 28px;
+            fill: white;
+        }
+
+        .back-button span {
+            color: white;
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .login-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            display: flex;
+            max-width: 900px;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .image-section {
+            flex: 1;
+            background: linear-gradient(to bottom, #a8c5e8, #d8c5e8);
+            padding: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .image-section img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 10;
+        }
+
+        .form-section {
+            flex: 1;
+            padding: 50px 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .welcome-title {
+            text-align: center;
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            border-bottom: 3px solid #333;
+            padding-bottom: 5px;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .system-title {
+            text-align: center;
+            font-size: 32px;
+            font-weight: bold;
+            margin: 20px 0 5px;
+            color: #333;
+        }
+
+        .system-subtitle {
+            text-align: center;
+            font-size: 11px;
+            color: #666;
+            letter-spacing: 2px;
+            margin-bottom: 5px;
+        }
+
+        .system-description {
+            text-align: center;
+            font-size: 12px;
+            color: #888;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #8b7ab8;
+        }
+
+        .form-group input::placeholder {
+            color: #aaa;
+        }
+
+        .form-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            font-size: 13px;
+        }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .remember-me input {
+            width: auto;
+        }
+
+        .forgot-password {
+            color: #8b7ab8;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .forgot-password:hover {
+            text-decoration: underline;
+        }
+
+        .login-button {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #8b7ab8 0%, #9b8fb8 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .login-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(139, 122, 184, 0.3);
+        }
+
+        .register-link {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 13px;
+            color: #666;
+        }
+
+        .register-link a {
+            color: #8b7ab8;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .register-link a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .login-container {
+                flex-direction: column;
+            }
+
+            .image-section {
+                min-height: 200px;
+            }
+
+            .form-section {
+                padding: 30px 25px;
+            }
+
+            .back-button {
+                top: 20px;
+                left: 20px;
+                width: auto;
+                height: 50px;
+                padding: 0 15px;
+            }
+
+            .back-button svg {
+                width: 24px;
+                height: 24px;
+            }
+            
+            .back-button span {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Back Button - Now redirects to landingpage.html -->
+    <button class="back-button" onclick="goToLandingPage()" title="Go to Home">
+        <svg viewBox="0 0 24 24">
+            <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
+        </svg>
+        <span>Back</span>
+    </button>
+
+    <div class="login-container">
+        <div class="image-section">
+            <div class="logo">
+                <svg width="40" height="40" viewBox="0 0 40 40">
+                    <circle cx="20" cy="20" r="18" fill="#4a7ba7" opacity="0.2"/>
+                    <circle cx="20" cy="20" r="14" fill="#4a7ba7" opacity="0.4"/>
+                    <circle cx="20" cy="20" r="10" fill="#4a7ba7"/>
+                </svg>
+            </div>
+            <!-- Replace this image path with your actual image -->
+            <img src="/static/uploads/lagen.png" alt="LSPU Campus" id="loginImage">
+        </div>
+
+        <div class="form-section">
+            <h1 class="welcome-title">Welcome Back!</h1>
+            
+            <h2 class="system-title">GSU</h2>
+            <p class="system-subtitle">GENERAL SERVICES UNIT</p>
+            <p class="system-description">Sign in to access your Account</p>
+
+            <form action="/login" method="POST">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" placeholder="Enter your username..." required>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" placeholder="Enter your password..." required>
+                </div>
+
+                <div class="form-options">
+                    <label class="remember-me">
+                        <input type="checkbox" id="remember">
+                        <span>Remember Me</span>
+                    </label>
+                    <a href="#" class="forgot-password">Forgot Password?</a>
+                </div>
+
+                <button type="submit" class="login-button">Log In</button>
+            </form>
+
+            <p class="register-link">
+                Don't have an account? <a href="#">Register here</a>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        function goToLandingPage() {
+            // Redirect to landing page
+            window.location.href = '/';
+        }
+
+        // Form validation
+        document.querySelector('form').addEventListener('submit', function(e) {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            if (!username || !password) {
+                e.preventDefault();
+                alert('Please fill in both username and password.');
+                return;
+            }
+            
+            // Add loading state
+            const submitBtn = document.querySelector('.login-button');
+            submitBtn.innerHTML = 'Logging in...';
+            submitBtn.disabled = true;
+        });
+
+        // Fallback image in case the main image fails to load
+        document.getElementById('loginImage').onerror = function() {
+            // Create a gradient fallback
+            this.style.background = 'linear-gradient(135deg, #6b8ba4 0%, #8b7ba4 100%)';
+            this.style.display = 'flex';
+            this.style.alignItems = 'center';
+            this.style.justifyContent = 'center';
+            this.style.color = 'white';
+            this.style.fontSize = '16px';
+            this.style.fontWeight = 'bold';
+            this.innerHTML = 'LSPU Campus';
+        };
+    </script>
+</body>
+</html>

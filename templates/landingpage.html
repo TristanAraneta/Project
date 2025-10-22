@@ -1,0 +1,364 @@
+<html>
+<head>
+    <title>Welcome to GSU Monitoring System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f5f7fa;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        nav {
+            background-image: linear-gradient(90deg, #6E99D1, #9670A4);
+            color: white;
+            padding: 20px 20px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        nav.scrolled {
+            padding: 15px 20px;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+        }
+
+        .logo img {
+            width: 60px;
+            height: 60px; 
+            margin-right: 10px; 
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        nav.scrolled .logo img {
+            width: 50px;
+            height: 50px;
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 24px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        nav.scrolled .logo {
+            font-size: 20px;
+        }
+
+        .logo i {
+            margin-right: 8px;
+            color: #60a5fa;
+        }
+
+        .nav-links {
+            list-style: none;
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #93c5fd;
+        }
+
+        .button {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .btn {
+            border: none;
+            padding: 8px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.3s ease;
+        }
+
+        nav.scrolled .btn {
+            padding: 6px 12px;
+            font-size: 0.9rem;
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            color: white;
+            border: 2px solid #ffffff;
+        }
+
+        .btn-outline:hover {
+            background-color: #3b82f6;
+            border-color: #3b82f6;
+        }
+
+        .btn-primary {
+            background-color: #3b82f6;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #2563eb;
+        }
+
+        .hero {
+            background-image: linear-gradient(rgba(110, 153, 209, 0.8), rgba(150, 112, 164, 0.8)), url('/static/uploads/Skul.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            height: 80vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+            padding: 0 20px;
+            margin-top: 80px;
+        }
+
+        .hero-content {
+            max-width: 800px;
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .hero-subtitle {
+            font-size: 1.8rem;
+            font-weight: 300;
+            margin-bottom: 1.5rem;
+            opacity: 0.9;
+        }
+
+        .hero-description {
+            font-size: 1.2rem;
+            margin-bottom: 2.5rem;
+            opacity: 0.8;
+            line-height: 1.6;
+        }
+
+        .features {
+            padding: 80px 20px;
+            background-color: white;
+        }
+
+        .features-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .section-title h2 {
+            font-size: 2.5rem;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+
+        .section-title p {
+            font-size: 1.2rem;
+            color: #7f8c8d;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .feature-card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 30px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-left: 4px solid #6E99D1;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        .feature-card h3 {
+            color: #2c3e50;
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .feature-card h3 i {
+            color: #6E99D1;
+            font-size: 1.2rem;
+        }
+
+        .feature-card p {
+            color: #5a6c7d;
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        /* Simple Footer Styles */
+        footer {
+            background: linear-gradient(90deg, #2c3e50, #34495e);
+            color: white;
+            padding: 30px 20px;
+            margin-top: auto;
+            text-align: center;
+        }
+
+        .researchers {
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+
+        .researchers span {
+            display: block;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <nav id="mainNav">
+        <div class="nav-container">
+            <a href="#" class="logo">
+                <img src="/static/uploads/lspu_logo.avif" alt="GSU Logo">
+                <span>GSU Monitoring System</span>
+            </a>
+
+            <div class="button">
+                <a href="/login" class="btn btn-outline">
+                    <i class="fas fa-sign-in-alt"></i> Login
+                </a>
+
+                <a href="/register" class="btn btn-primary">
+                    <i class="fas fa-user-plus"></i> Register
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section with Background Image -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1 class="hero-title">GSU<br>MONITORING SYSTEM</h1>
+            <h2 class="hero-subtitle">INVENTORY MANAGEMENT SYSTEM</h2>
+            <p class="hero-description">"Manage and monitor all your equipment and areas in one system."</p>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features">
+        <div class="features-container">
+            <div class="section-title">
+                <h2>What We Do</h2>
+                <p>The GSU Monitoring System is dedicated to providing comprehensive inventory tracking and management solutions. We aim to streamline operations, optimize resources, and provide real-time insights through advanced monitoring and analytics.</p>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <h3><i class="fas fa-clipboard-check"></i> Area Monitoring</h3>
+                    <p>Track completion status of different campus areas with visual progress indicators and real-time status updates for efficient facility management.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <h3><i class="fas fa-boxes"></i> Inventory Tracking</h3>
+                    <p>Monitor stock levels across all departments with automated alerts for low inventory and comprehensive item usage tracking.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <h3><i class="fas fa-exchange-alt"></i> Borrowing System</h3>
+                    <p>Streamline equipment and resource borrowing with automated tracking, due date management, and return reminder systems.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <h3><i class="fas fa-chart-bar"></i> Analytics & Reports</h3>
+                    <p>Gain valuable insights with comprehensive usage trends, performance metrics, and data-driven decision support tools.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <h3><i class="fas fa-tasks"></i> Checklist Management</h3>
+                    <p>Create and manage custom checklists for maintenance, inspections, and routine tasks with visual completion tracking.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <h3><i class="fas fa-user-shield"></i> Admin Controls</h3>
+                    <p>Maintain complete oversight with comprehensive user permission management, request approvals, and system administration tools.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <h3><i class="fas fa-bell"></i> Real-time Alerts</h3>
+                    <p>Receive instant notifications for critical updates, low stock levels, overdue items, and system maintenance requirements.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <h3><i class="fas fa-mobile-alt"></i> Mobile Access</h3>
+                    <p>Access all monitoring features on-the-go with our responsive mobile interface designed for seamless touch interaction.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Simple Footer Section -->
+    <footer>
+        <div class="researchers">
+            <span>Sir Jun</span>
+            <span>Sir Wise</span>
+            <span>Sir Veenus</span>
+        </div>
+    </footer>
+
+    <script>
+        // Sticky navigation with scroll effect
+        window.addEventListener('scroll', function() {
+            const nav = document.getElementById('mainNav');
+            if (window.scrollY > 50) {
+                nav.classList.add('scrolled');
+            } else {
+                nav.classList.remove('scrolled');
+            }
+        });
+    </script>
+</body>
+</html>
