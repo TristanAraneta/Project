@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GSU Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/monitoring.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/modal.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/inventory.css') }}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="flex-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo-container">
+                    <img src="/static/uploads/lspu_logo.avif" alt="GSU Logo" class="logo-image">
+                </div>
+                <div class="logo-text">
+                    <div class="text-line">General</div>
+                    <div class="text-line">Services</div>
+                    <div class="text-line">Unit</div>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <button class="nav-btn active" data-tab="monitoring">
+                    <i class="fas fa-eye"></i>
+                    <span>Monitoring</span>
+                </button>
+                <button class="nav-btn" data-tab="inventory" onclick="location.href='/inventory'">
+                    <i class="fas fa-cube"></i>
+                    <span>Inventory</span>
+                </button>
+                <button class="nav-btn" data-tab="borrowing" onclick="location.href='/borrowing'">
+                    <i class="fas fa-exchange-alt"></i>
+                    <span>Borrowing</span>
+                </button>
+                <button class="nav-btn" data-tab="graph" onclick="location.href='/graph'">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Graph</span>
+                </button>
+            </nav>
+
+
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Header -->
+            <div class="header">
+                <div class="header-left">
+                    <i class="fas fa-eye"></i>
+                    <h1>Area Monitoring</h1>
+                </div>
+                <div class="header-right">
+                    <button class="super-btn" id="superRemainingBtn">
+                        {{ username[0] if username else 'U' }}
+                    </button>
+                </div>
+            </div>
+
+            <!-- Logout Modal (Hidden by default) -->
+            <div class="logout-modal" id="logoutPanel">
+                <div class="logout-modal-content">
+                    <div class="logout-modal-header">
+                        <h3>{{ username }}</h3>
+                        <button class="close-btn" id="closeLogoutPanel">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="logout-modal-body">
+                        <h4>Confirm Logout</h4>
+                        <p>Are you sure you want to log out of your account?</p>
+                    </div>
+                    <div class="logout-modal-actions">
+                        <button class="cancel-btn" id="cancelLogout">Cancel</button>
+                        <button class="logout-btn" id="confirmLogout">
+                            <i class="fas fa-sign-out-alt"></i>
+                            Log Out
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Content Areas -->
+            <div class="content-area" id="monitoringContent">
+                <!-- Monitoring Summary -->
+                <div class="inventory-summary">
+                    <div class="summary-card">
+                        <h3>Monitoring Summary</h3>
+                        <div class="summary-stats">
+                            <div class="summary-item">
+                                <span class="summary-label">Total Areas:</span>
+                                <span class="summary-value">{{ stats.total }}</span>
+                            </div>
+                            <div class="summary-item">
+                                <span class="summary-label">Pending:</span>
+                                <span class="summary-value warning">{{ stats.pending }}</span>
+                            </div>
+                            <div class="summary-item">
+                                <span class="summary-label">Completed:</span>
+                                <span class="summary-value success">{{ stats.completed }}</span>
+                            </div>
+                            <div class="summary-item">
+                                <span class="summary-label">Checked This Month:</span>
+                                <span class="summary-value">{{ stats.checked_this_month }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Add New Area Modal -->
+                <div class="modal" id="addAreaModal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3>Add New Area</h3>
+                            <button class="close-btn" id="closeAddAreaModal">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="addAreaForm">
+                                <div class="form-group">
+                                    <label for="areaName">Area Name</label>
+                                    <input type="text" id="areaName" name="areaName" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="building">Building</label>
+                                    <input type="text" id="building" name="building" required>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="cancel-btn" id="cancelAddArea">Cancel</button>
+                            <button class="add-btn" id="submitAddArea">
+                                <i class="fas fa-plus"></i>
+                                Add Area
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Add New Area Button -->
+                <div class="action-bar">
+                    <button class="add-btn" id="openAddAreaModal">
+                        <i class="fas fa-plus"></i>
+                        <span>Add Area</span>
+                    </button>
+                </div>
+
+                <!-- Table -->
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Areas</th>
+                                <th>Status</th>
+                                <th>Last Check</th>
+                                <th>Checked By</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% if areas %}
+                            {% for area in areas %}
+                            <tr class="{{ 'even' if loop.index0 % 2 == 0 else 'odd' }}">
+                                <td>{{ area.name }} ({{ area.building }})</td>
+                                <td>
+                                    <span class="status-badge {{ 'done' if area.status == 'completed' else 'pending' }}">
+                                        {{ area.status }}
+                                    </span>
+                                </td>
+                                <td>{{ area.last_check or 'Not checked' }}</td>
+                                <td>{{ area.checked_by_name or 'Not assigned' }}</td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="action-btn">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="action-btn">
+                                            <i class="fas fa-camera"></i>
+                                        </button>
+                                        <button class="action-btn">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="action-btn delete-btn" data-area-id="{{ area.id }}">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                            {% else %}
+                            <tr class="empty-state">
+                                <td colspan="5">
+                                    <div class="empty-message">
+                                        <i class="fas fa-eye"></i>
+                                        <h3>No Areas</h3>
+                                        <p>Get started by adding your first area to monitor.</p>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/monitoring.js') }}"></script>
+</body>
+</html>

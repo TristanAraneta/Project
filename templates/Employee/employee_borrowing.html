@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Borrowing Management - GSU</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/borrowing.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/modal.css') }}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="flex-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo-container">
+                    <img src="/static/uploads/lspu_logo.avif" alt="GSU Logo" class="logo-image">
+                </div>
+                <div class="logo-text">
+                    <div class="text-line">General</div>
+                    <div class="text-line">Services</div>
+                    <div class="text-line">Unit</div>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <button class="nav-btn" data-tab="monitoring" onclick="location.href='/dashboard'">
+                    <i class="fas fa-eye"></i>
+                    <span>Monitoring</span>
+                </button>
+                <button class="nav-btn" data-tab="inventory" onclick="location.href='/inventory'">
+                    <i class="fas fa-cube"></i>
+                    <span>Inventory</span>
+                </button>
+                <button class="nav-btn active" data-tab="borrowing">
+                    <i class="fas fa-exchange-alt"></i>
+                    <span>Borrowing</span>
+                </button>
+                <button class="nav-btn" data-tab="graph" onclick="location.href='/graph'">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Graph</span>
+                </button>
+            </nav>
+
+
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Header -->
+            <div class="header">
+                <div class="header-left">
+                    <i class="fas fa-exchange-alt"></i>
+                    <h1>Borrowing Management</h1>
+                </div>
+                <div class="header-right">
+                    <button class="super-btn" id="superRemainingBtn">
+                        {{ username[0] if username else 'U' }}
+                    </button>
+                </div>
+            </div>
+
+            <!-- Logout Modal (Hidden by default) -->
+            <div class="logout-modal" id="logoutPanel">
+                <div class="logout-modal-content">
+                    <div class="logout-modal-header">
+                        <h3>{{ username }}</h3>
+                        <button class="close-btn" id="closeLogoutPanel">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="logout-modal-body">
+                        <h4>Confirm Logout</h4>
+                        <p>Are you sure you want to log out of your account?</p>
+                    </div>
+                    <div class="logout-modal-actions">
+                        <button class="cancel-btn" id="cancelLogout">Cancel</button>
+                        <button class="logout-btn" id="confirmLogout">
+                            <i class="fas fa-sign-out-alt"></i>
+                            Log Out
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Borrowing Content -->
+            <div class="content-area">
+                <!-- Borrowing Summary -->
+                <div class="borrowing-summary">
+                    <div class="summary-card">
+                        <h3>Borrowing Summary</h3>
+                        <div class="summary-stats">
+                            <div class="summary-item">
+                                <span class="summary-label">Total Borrowings:</span>
+                                <span class="summary-value">0</span>
+                            </div>
+                            <div class="summary-item">
+                                <span class="summary-label">Active:</span>
+                                <span class="summary-value success">0</span>
+                            </div>
+                            <div class="summary-item">
+                                <span class="summary-label">Overdue:</span>
+                                <span class="summary-value critical">0</span>
+                            </div>
+                            <div class="summary-item">
+                                <span class="summary-label">Returned:</span>
+                                <span class="summary-value">0</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Search and Actions -->
+                <div class="borrowing-header">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="searchBorrowings" placeholder="Search borrowings...">
+                    </div>
+                    <button class="add-btn" id="newBorrowBtn">
+                        <i class="fas fa-plus"></i>
+                        <span>Add Borrowing</span>
+                    </button>
+                </div>
+
+                <!-- Borrowing Table -->
+                <div class="table-container">
+                    <table class="data-table borrowing-table">
+                        <thead>
+                            <tr>
+                                <th>Borrowers</th>
+                                <th>Item</th>
+                                <th>Quantity</th>
+                                <th>Date Borrowed</th>
+                                <th>Due Date</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="borrowingTableBody">
+                            <!-- Empty state -->
+                            <tr class="empty-state">
+                                <td colspan="7">
+                                    <div class="empty-message">
+                                        <i class="fas fa-exchange-alt"></i>
+                                        <h3>No Borrowings</h3>
+                                        <p>No borrowings recorded yet. Start by creating a new borrow request.</p>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- New Borrow Modal -->
+    <div class="modal" id="newBorrowModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>New Borrow Request</h3>
+                <button class="close-btn" id="closeBorrowModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="newBorrowForm">
+                    <div class="form-group">
+                        <label for="borrowerName">Borrower Name</label>
+                        <input type="text" id="borrowerName" name="borrowerName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="borrowItem">Item/Tools</label>
+                        <select id="borrowItem" name="borrowItem" required>
+                            <option value="">Select an item</option>
+                            <!-- Items will be populated from inventory -->
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="borrowQuantity">Quantity</label>
+                        <input type="number" id="borrowQuantity" name="borrowQuantity" required min="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="dateBorrowed">Date Borrowed</label>
+                        <input type="date" id="dateBorrowed" name="dateBorrowed" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="dueDate">Due Date</label>
+                        <input type="date" id="dueDate" name="dueDate" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="cancel-btn" id="cancelBorrow">Cancel</button>
+                <button class="add-btn" id="saveBorrow">Create Borrow</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/borrowing.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Graph Analytics - GSU</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/graph.css') }}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="flex-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo-container">
+                    <img src="/static/uploads/lspu_logo.avif" alt="GSU Logo" class="logo-image">
+                </div>
+                <div class="logo-text">
+                    <div class="text-line">General</div>
+                    <div class="text-line">Services</div>
+                    <div class="text-line">Unit</div>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <button class="nav-btn" data-tab="monitoring" onclick="location.href='/dashboard'">
+                    <i class="fas fa-eye"></i>
+                    <span>Monitoring</span>
+                </button>
+                <button class="nav-btn" data-tab="inventory" onclick="location.href='/inventory'">
+                    <i class="fas fa-cube"></i>
+                    <span>Inventory</span>
+                </button>
+                <button class="nav-btn" data-tab="borrowing" onclick="location.href='/borrowing'">
+                    <i class="fas fa-exchange-alt"></i>
+                    <span>Borrowing</span>
+                </button>
+                <button class="nav-btn active" data-tab="graph">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Graph</span>
+                </button>
+            </nav>
+
+
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Header -->
+            <div class="header">
+                <div class="header-left">
+                    <i class="fas fa-chart-line"></i>
+                    <h1>Graph Analytics</h1>
+                </div>
+                <div class="header-right">
+                    <button class="super-btn" id="superRemainingBtn">
+                        {{ username[0] if username else 'U' }}
+                    </button>
+                </div>
+            </div>
+
+            <!-- Logout Modal (Hidden by default) -->
+            <div class="logout-modal" id="logoutPanel">
+                <div class="logout-modal-content">
+                    <div class="logout-modal-header">
+                        <h3>{{ username }}</h3>
+                        <button class="close-btn" id="closeLogoutPanel">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="logout-modal-body">
+                        <h4>Confirm Logout</h4>
+                        <p>Are you sure you want to log out of your account?</p>
+                    </div>
+                    <div class="logout-modal-actions">
+                        <button class="cancel-btn" id="cancelLogout">Cancel</button>
+                        <button class="logout-btn" id="confirmLogout">
+                            <i class="fas fa-sign-out-alt"></i>
+                            Log Out
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Graph Content -->
+            <div class="content-area">
+                <!-- Analytics Section -->
+                <div class="analytics-section">
+                    <!-- Analytics Summary -->
+                    <div class="analytics-summary">
+                        <div class="summary-card">
+                            <h3>Analytics Summary</h3>
+                            <div class="summary-stats">
+                                <div class="summary-item">
+                                    <span class="summary-label">Most Used This Month:</span>
+                                    <span class="summary-value">0</span>
+                                </div>
+                                <div class="summary-item">
+                                    <span class="summary-label">Low Stock Items:</span>
+                                    <span class="summary-value warning">0</span>
+                                </div>
+                                <div class="summary-item">
+                                    <span class="summary-label">High Stock Items:</span>
+                                    <span class="summary-value success">0</span>
+                                </div>
+                                <div class="summary-item">
+                                    <span class="summary-label">Out of Stock:</span>
+                                    <span class="summary-value critical">0</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Charts Grid -->
+                    <div class="charts-grid">
+                        <!-- Highest Stock This Month -->
+                        <div class="chart-card">
+                            <div class="chart-header">
+                                <h4>Highest Stock This Month</h4>
+                                <i class="fas fa-chart-bar"></i>
+                            </div>
+                            <div class="empty-chart">
+                                <i class="fas fa-chart-bar"></i>
+                                <p>No stock data available</p>
+                                <small>Top stock items will appear here in descending order</small>
+                            </div>
+                        </div>
+
+                        <!-- Lowest Stock to Highest -->
+                        <div class="chart-card">
+                            <div class="chart-header">
+                                <h4>Lowest Stock this Month</h4>
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                            <div class="empty-chart">
+                                <i class="fas fa-chart-line"></i>
+                                <p>No stock data available</p>
+                                <small>Stock levels from lowest to highest will appear here</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/graph.js') }}"></script>
+</body>
+</html>

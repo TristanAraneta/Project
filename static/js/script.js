@@ -4,62 +4,51 @@ document.addEventListener('DOMContentLoaded', function() {
     const superRemainingBtn = document.getElementById('superRemainingBtn');
     const logoutPanel = document.getElementById('logoutPanel');
     const closeLogoutPanel = document.getElementById('closeLogoutPanel');
-    const cancelLogout = document.getElementById('cancelLogout');
     const confirmLogout = document.getElementById('confirmLogout');
-    const loginTime = document.getElementById('loginTime');
-    const sessionDuration = document.getElementById('sessionDuration');
-    const lastActivity = document.getElementById('lastActivity');
-
-    let sessionStartTime = new Date();
-    let lastActivityTime = new Date();
-
-    // Initialize session info
-    updateSessionInfo();
-    setInterval(updateSessionInfo, 1000);
-
-    // Update user activity
-    document.addEventListener('click', updateLastActivity);
-    document.addEventListener('keypress', updateLastActivity);
 
     // Tab switching
     navButtons.forEach(button => {
         button.addEventListener('click', function() {
             navButtons.forEach(btn => btn.classList.remove('active'));
             this.classList.add('active');
-            
+
             const tab = this.getAttribute('data-tab');
             console.log('Switching to tab:', tab);
-        });
-    });
-    
-    // Add button functionality
-    const addButton = document.querySelector('.add-btn');
-    if (addButton) {
-        addButton.addEventListener('click', function() {
-            alert('Add New Area functionality would go here');
-        });
-    }
-    
-    // Action buttons functionality
-    const actionButtons = document.querySelectorAll('.action-btn');
-    actionButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            const icon = this.querySelector('i').className;
-            if (icon.includes('fa-eye')) {
-                alert('View action clicked');
-            } else if (icon.includes('fa-camera')) {
-                alert('Camera action clicked');
-            } else if (icon.includes('fa-edit')) {
-                alert('Edit action clicked');
+
+            // Hide all content areas
+            document.getElementById('monitoringContent').style.display = 'none';
+            document.getElementById('inventoryContent').style.display = 'none';
+
+            // Show selected content area
+            if (tab === 'monitoring') {
+                document.getElementById('monitoringContent').style.display = 'block';
+                document.querySelector('.header-left i').className = 'fas fa-eye';
+                document.querySelector('.header-left h1').textContent = 'Area Monitoring';
+            } else if (tab === 'inventory') {
+                document.getElementById('inventoryContent').style.display = 'block';
+                document.querySelector('.header-left i').className = 'fas fa-cube';
+                document.querySelector('.header-left h1').textContent = 'Inventory Management';
             }
         });
     });
+
+    // Function to show inventory tab (deprecated - now redirects to separate page)
+    window.showInventoryTab = function() {
+        // Redirect to inventory page instead of switching tabs
+        window.location.href = '/inventory';
+    };
+    
+
 
     // Super Remaining Button - Open logout panel
     superRemainingBtn.addEventListener('click', function() {
         logoutPanel.classList.add('active');
         document.body.style.overflow = 'hidden';
     });
+
+    // Initialize - hide logout panel on page load
+    logoutPanel.classList.remove('active');
+    document.body.style.overflow = 'auto';
 
     // Close logout panel
     closeLogoutPanel.addEventListener('click', closePanel);
@@ -160,7 +149,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // Redirect after short delay
             setTimeout(function() {
-                window.location.href = 'landingpage.html';
+                window.location.href = '/logout';
             }, 1000);
         });
 

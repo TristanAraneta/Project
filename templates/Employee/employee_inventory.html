@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventory Management - GSU</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/inventory.css') }}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="flex-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo-container">
+                    <img src="/static/uploads/lspu_logo.avif" alt="GSU Logo" class="logo-image">
+                </div>
+                <div class="logo-text">
+                    <div class="text-line">General</div>
+                    <div class="text-line">Services</div>
+                    <div class="text-line">Unit</div>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <button class="nav-btn" data-tab="monitoring" onclick="location.href='/dashboard'">
+                    <i class="fas fa-eye"></i>
+                    <span>Monitoring</span>
+                </button>
+                <button class="nav-btn active" data-tab="inventory">
+                    <i class="fas fa-cube"></i>
+                    <span>Inventory</span>
+                </button>
+                <button class="nav-btn" data-tab="borrowing" onclick="location.href='/borrowing'">
+                    <i class="fas fa-exchange-alt"></i>
+                    <span>Borrowing</span>
+                </button>
+                <button class="nav-btn" data-tab="graph" onclick="location.href='/graph'">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Graph</span>
+                </button>
+            </nav>
+
+
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Header -->
+            <div class="header">
+                <div class="header-left">
+                    <i class="fas fa-cube"></i>
+                    <h1>Inventory Management</h1>
+                </div>
+                <div class="header-right">
+                    <button class="super-btn" id="superRemainingBtn">
+                        {{ username[0] if username else 'U' }}
+                    </button>
+                </div>
+            </div>
+
+            <!-- Logout Modal (Hidden by default) -->
+            <div class="logout-modal" id="logoutPanel">
+                <div class="logout-modal-content">
+                    <div class="logout-modal-header">
+                        <h3>{{ username }}</h3>
+                        <button class="close-btn" id="closeLogoutPanel">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="logout-modal-body">
+                        <h4>Confirm Logout</h4>
+                        <p>Are you sure you want to log out of your account?</p>
+                    </div>
+                    <div class="logout-modal-actions">
+                        <button class="cancel-btn" id="cancelLogout">Cancel</button>
+                        <button class="logout-btn" id="confirmLogout">
+                            <i class="fas fa-sign-out-alt"></i>
+                            Log Out
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Inventory Content -->
+            <div class="content-area">
+                <!-- Inventory Summary -->
+                <div class="inventory-summary">
+                    <div class="summary-card">
+                        <h3>Inventory Summary</h3>
+                        <div class="summary-stats">
+                            <div class="summary-item">
+                                <span class="summary-label">Total Items:</span>
+                                <span class="summary-value">0</span>
+                            </div>
+                            <div class="summary-item">
+                                <span class="summary-label">Low Stock:</span>
+                                <span class="summary-value warning">0</span>
+                            </div>
+                            <div class="summary-item">
+                                <span class="summary-label">Out of Stock:</span>
+                                <span class="summary-value critical">0</span>
+                            </div>
+                            <div class="summary-item">
+                                <span class="summary-label">In Stock:</span>
+                                <span class="summary-value success">0</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Search and Actions -->
+                <div class="inventory-header">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="searchInventory" placeholder="Search items...">
+                    </div>
+                    <button class="add-btn" id="addItemBtn">
+                        <i class="fas fa-plus"></i>
+                        <span>Add Item</span>
+                    </button>
+                </div>
+
+                <!-- Inventory Table -->
+                <div class="table-container">
+                    <table class="data-table inventory-table">
+                        <thead>
+                            <tr>
+                                <th>Item No.</th>
+                                <th>Item Name</th>
+                                <th>Current Stock</th>
+                                <th>Stock Alert</th>
+                                <th>Unit</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="inventoryTableBody">
+                            <!-- Empty state -->
+                            <tr class="empty-state">
+                                <td colspan="7">
+                                    <div class="empty-message">
+                                        <i class="fas fa-cube"></i>
+                                        <h3>No Inventory Items</h3>
+                                        <p>Get started by adding your first inventory item.</p>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Item Modal -->
+    <div class="modal" id="addItemModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add New Inventory Item</h3>
+                <button class="close-btn" id="closeModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="addItemForm">
+                    <div class="form-group">
+                        <label for="itemName">Item Name</label>
+                        <input type="text" id="itemName" name="itemName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="currentStock">Current Stock</label>
+                        <input type="number" id="currentStock" name="currentStock" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="stockAlert">Stock Alert Level</label>
+                        <input type="number" id="stockAlert" name="stockAlert" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="unit">Unit</label>
+                        <select id="unit" name="unit">
+                            <option value="pcs">Pieces</option>
+                            <option value="set">Set</option>
+                            <option value="box">Box</option>
+                            <option value="ream">Ream</option>
+                            <option value="bottle">Bottle</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="category">Category</label>
+                        <input type="text" id="category" name="category">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="cancel-btn" id="cancelAddItem">Cancel</button>
+                <button class="add-btn" id="saveItem">Save Item</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/inventory.js') }}"></script>
+</body>
+</html>
